@@ -23,6 +23,12 @@ public class Circle extends ShapeImpl {
 	@Override
 	public void draw(Graphics canvas) {
 		final int r=getProperties().get("Radius").intValue();
+		/*((Graphics2D) canvas).setColor(getFillColor());
+		final Ellipse2D.Double shape = new Ellipse2D.Double((int)getPosition().getX(),(int) getPosition().getY(),r,r);
+		((Graphics2D) canvas).fill(shape);
+		((Graphics2D) canvas).setColor(getColor());
+		((Graphics2D) canvas).draw(shape);*/
+
 		((Graphics2D) canvas).setColor(getFillColor());
 		((Graphics2D) canvas).fillOval((int)getPosition().getX(),(int) getPosition().getY(),r,r);
 		((Graphics2D) canvas).setStroke(new BasicStroke(2));

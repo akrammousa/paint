@@ -23,7 +23,6 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Deque;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -54,10 +53,10 @@ import eg.edu.alexu.csd.oop.draw.cs14.json.parser.JSONParser;
 
 public class DrawEngineImpl extends ClassLoader implements DrawingEngine {
 
-	private final List<Shape> drawnShapes;
+	public final List<Shape> drawnShapes;
 	private final Deque<Operation> undo = new LinkedList<Operation>();
 	private final Deque<Operation> redo = new LinkedList<Operation>();
-	private LinkedList<Class<? extends Shape>> supportedShapes
+	private final LinkedList<Class<? extends Shape>> supportedShapes
 	= new LinkedList<Class<? extends Shape>>();
 
 	public DrawEngineImpl() {
@@ -68,7 +67,7 @@ public class DrawEngineImpl extends ClassLoader implements DrawingEngine {
 		supportedShapes.add(Square.class);
 		supportedShapes.add(Triangle.class);
 		supportedShapes.add(Elipse.class);
-		
+
 	}
 
 	@Override
@@ -129,7 +128,7 @@ public class DrawEngineImpl extends ClassLoader implements DrawingEngine {
 	@Override
 	public List<Class<? extends Shape>> getSupportedShapes() {
 		// TODO Auto-generated method stub
-		
+
 		return supportedShapes;
 	}
 
@@ -196,7 +195,7 @@ public class DrawEngineImpl extends ClassLoader implements DrawingEngine {
 				} catch (final Exception e) {
 					typeS = "Null";
 				}
-				
+
 				singleShape.put("Type", typeS);
 
 				final JSONArray properties = new JSONArray();
@@ -248,76 +247,76 @@ public class DrawEngineImpl extends ClassLoader implements DrawingEngine {
 			try {
 				final String name = null;
 				builder = dbf.newDocumentBuilder();
-		} catch (final ParserConfigurationException pce) {
-			//System.out.println("UsersXML: Error trying to instantiate DocumentBuilder " + pce);
-		}
-				final Document dom = builder.newDocument();
-				// create the root element
-				final Element rootEle = dom.createElement("shapes");
-				// create the root element
-				for (int i = 0; i < drawnShapes.size(); i++) {
-					Element e = dom.createElement("name");
-					final Shape temp = drawnShapes.get(i);
-					// create data elements and place them under root
-					String typeS = "Null";
-					try {
-						typeS = ((ShapeImpl)temp).getType();
-					} catch (final Exception e1) {
-						typeS = "Null";
-					}
-
-					e.appendChild(dom.createTextNode(typeS));
-					rootEle.appendChild(e);
-					String properites = "";
-					if (temp != null && !typeS.equals("Null")) {
-					
-						properites = properites + String.valueOf(temp.getPosition().getX()) + ",";
-
-						properites = properites + String.valueOf(temp.getPosition().getY()) + ",";
-					
-						properites = properites + temp.getColor().getRed() + ",";
-					
-						properites = properites + temp.getColor().getGreen() + ",";
-					
-						properites = properites + temp.getColor().getBlue() + ",";
-					
-						properites = properites + temp.getFillColor().getRed() + ",";
-					
-						properites = properites + temp.getFillColor().getGreen() + ",";
-					
-						properites = properites + temp.getFillColor().getBlue() + ",";
-					
-						for (final Map.Entry<String, Double> s : temp.getProperties().entrySet()) {
-							try {
-								properites = properites + String.valueOf(s.getValue()) + ",";
-							} catch (final Exception e1) {
-
-							}
-						}
-						System.out.println(properites);
-					
-					}
-
-					e = dom.createElement("properties");
-					e.appendChild(dom.createTextNode(properites));
-					rootEle.appendChild(e);
-				}
-
-				dom.appendChild(rootEle);
-
+			} catch (final ParserConfigurationException pce) {
+				//System.out.println("UsersXML: Error trying to instantiate DocumentBuilder " + pce);
+			}
+			final Document dom = builder.newDocument();
+			// create the root element
+			final Element rootEle = dom.createElement("shapes");
+			// create the root element
+			for (int i = 0; i < drawnShapes.size(); i++) {
+				Element e = dom.createElement("name");
+				final Shape temp = drawnShapes.get(i);
+				// create data elements and place them under root
+				String typeS = "Null";
 				try {
-					final Transformer tr = TransformerFactory.newInstance().newTransformer();
-					tr.setOutputProperty(OutputKeys.METHOD,"xml");
-					tr.setOutputProperty(OutputKeys.ENCODING,"ISO-8859-1");
-					tr.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
-					tr.transform(new DOMSource(dom), new StreamResult(new FileOutputStream(path)));
-
-				} catch (final TransformerException te) {
-					System.out.println(te.getMessage());
-				} catch (final IOException ioe) {
-					System.out.println(ioe.getMessage());
+					typeS = ((ShapeImpl)temp).getType();
+				} catch (final Exception e1) {
+					typeS = "Null";
 				}
-			
+
+				e.appendChild(dom.createTextNode(typeS));
+				rootEle.appendChild(e);
+				String properites = "";
+				if (temp != null && !typeS.equals("Null")) {
+
+					properites = properites + String.valueOf(temp.getPosition().getX()) + ",";
+
+					properites = properites + String.valueOf(temp.getPosition().getY()) + ",";
+
+					properites = properites + temp.getColor().getRed() + ",";
+
+					properites = properites + temp.getColor().getGreen() + ",";
+
+					properites = properites + temp.getColor().getBlue() + ",";
+
+					properites = properites + temp.getFillColor().getRed() + ",";
+
+					properites = properites + temp.getFillColor().getGreen() + ",";
+
+					properites = properites + temp.getFillColor().getBlue() + ",";
+
+					for (final Map.Entry<String, Double> s : temp.getProperties().entrySet()) {
+						try {
+							properites = properites + String.valueOf(s.getValue()) + ",";
+						} catch (final Exception e1) {
+
+						}
+					}
+					System.out.println(properites);
+
+				}
+
+				e = dom.createElement("properties");
+				e.appendChild(dom.createTextNode(properites));
+				rootEle.appendChild(e);
+			}
+
+			dom.appendChild(rootEle);
+
+			try {
+				final Transformer tr = TransformerFactory.newInstance().newTransformer();
+				tr.setOutputProperty(OutputKeys.METHOD,"xml");
+				tr.setOutputProperty(OutputKeys.ENCODING,"ISO-8859-1");
+				tr.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
+				tr.transform(new DOMSource(dom), new StreamResult(new FileOutputStream(path)));
+
+			} catch (final TransformerException te) {
+				System.out.println(te.getMessage());
+			} catch (final IOException ioe) {
+				System.out.println(ioe.getMessage());
+			}
+
 		}
 	}
 
@@ -331,43 +330,43 @@ public class DrawEngineImpl extends ClassLoader implements DrawingEngine {
 		if (extension.equals("XmL")) {
 
 
-			File file = new File(path);
+			final File file = new File(path);
 			InputStream inputStream;
 			Reader reader = null;
 			try {
 				inputStream = new FileInputStream(file);
 				try {
 					reader = new InputStreamReader(inputStream, "ISO-8859-1");
-				} catch (UnsupportedEncodingException e) {
+				} catch (final UnsupportedEncodingException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-			} catch (FileNotFoundException e1) {
+			} catch (final FileNotFoundException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
-			
-			InputSource is = new InputSource(reader);
+
+			final InputSource is = new InputSource(reader);
 			is.setEncoding("ISO-8859-1");
 			// Make an instance of the DocumentBuilderFactory
 			try {
 				// use the factory to take an instance of the document builder
 				final DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 				final DocumentBuilder db = dbf.newDocumentBuilder();
-				
-				Document dom = db.parse(is);
+
+				final Document dom = db.parse(is);
 
 				// parse using the builder to get the DOM mapping of the
 				// XML file
 
-				
+
 				//System.out.println(drawnShapes.size());
-				
-				
+
+
 				this.drawnShapes.clear();
 				//System.out.println(drawnShapes.size());
 
-	
+
 
 				final Element root = dom.getDocumentElement();
 				final NodeList shapesList = root.getChildNodes();
@@ -377,67 +376,67 @@ public class DrawEngineImpl extends ClassLoader implements DrawingEngine {
 					if (temp.getNodeName() == "name") {
 						for (int j = 0; j < this.supportedShapes.size(); j++) {
 							//System.out.println(this.supportedShapes.get(j).getSimpleName());
-							if (this.supportedShapes.get(j).getSimpleName().equals(temp.getTextContent())) {	
-					            // Create a new instance from the loaded class
-					            Constructor constructor = null;
-					            Shape shapeObject = null;
+							if (this.supportedShapes.get(j).getSimpleName().equals(temp.getTextContent())) {
+								// Create a new instance from the loaded class
+								Constructor constructor = null;
+								Shape shapeObject = null;
 								try {
 									constructor = this.getSupportedShapes().get(j).getConstructor();
 									shapeObject = (Shape)constructor.newInstance();
-									
-					
+
+
 									final org.w3c.dom.Node temp2 = temp.getNextSibling();
 									final String properites = temp2.getTextContent();
 									final String[] properitesArray = properites.split(",");
 									final Point point = new Point();
 									point.x = (int) Double.parseDouble(properitesArray[0]);
 									point.y = (int) Double.parseDouble(properitesArray[1]);
-									
-									Method methodSetPosition = this.getSupportedShapes().get(j).getMethod("setPosition", Point.class);
+
+									final Method methodSetPosition = this.getSupportedShapes().get(j).getMethod("setPosition", Point.class);
 									System.out.println("Invoked method name: " + methodSetPosition.getName());
 									methodSetPosition.invoke(shapeObject, point);
-									
+
 									final Color color = new Color(Float.parseFloat(properitesArray[2]),
 											Float.parseFloat(properitesArray[3]), Float.parseFloat(properitesArray[4]));
 									final Color fillColor = new Color(Float.parseFloat(properitesArray[5]),
 											Float.parseFloat(properitesArray[6]), Float.parseFloat(properitesArray[7]));
-									
-									Method methodSetColor = this.getSupportedShapes().get(j).getMethod("setColor", Color.class);
+
+									final Method methodSetColor = this.getSupportedShapes().get(j).getMethod("setColor", Color.class);
 									System.out.println("Invoked method name: " + methodSetColor.getName());
 									methodSetColor.invoke(shapeObject, color);
-	
-									Method methodSetFillColor = this.getSupportedShapes().get(j).getMethod("setFillColor", Color.class);
+
+									final Method methodSetFillColor = this.getSupportedShapes().get(j).getMethod("setFillColor", Color.class);
 									System.out.println("Invoked method name: " + methodSetFillColor.getName());
 									methodSetFillColor.invoke(shapeObject, fillColor);
-	
-									Method methodGetProperties = this.getSupportedShapes().get(j).getMethod("getProperties");
+
+									final Method methodGetProperties = this.getSupportedShapes().get(j).getMethod("getProperties");
 									System.out.println("Invoked method name: " + methodGetProperties.getName());
 									final Map<String, Double> map = (Map<String, Double>) methodGetProperties.invoke(shapeObject);
-												
+
 									int counter = 8;
-									for (String key : map.keySet()) {
+									for (final String key : map.keySet()) {
 										map.put(key, Double.parseDouble(properitesArray[counter++]));
 									}
-									
-									
-									Method methodSetProperties = this.getSupportedShapes().get(j).getMethod("setProperties", Map.class);
+
+
+									final Method methodSetProperties = this.getSupportedShapes().get(j).getMethod("setProperties", Map.class);
 									System.out.println("Invoked method name: " + methodSetProperties.getName());
 									methodSetProperties.invoke(shapeObject, map);
-						
+
 									drawnShapes.add(shapeObject);
 									i = i + 1;
 									break;
-									
-								} catch (IllegalAccessException e) {
+
+								} catch (final IllegalAccessException e) {
 									// TODO Auto-generated catch block
 									e.printStackTrace();
-								} catch (IllegalArgumentException e) {
+								} catch (final IllegalArgumentException e) {
 									// TODO Auto-generated catch block
 									e.printStackTrace();
-								} catch (InvocationTargetException e) {
+								} catch (final InvocationTargetException e) {
 									// TODO Auto-generated catch block
 									e.printStackTrace();
-								} catch (Exception e) {
+								} catch (final Exception e) {
 									e.printStackTrace();
 								}
 							} else if (temp.getTextContent().equals("Null")) {
@@ -456,7 +455,7 @@ public class DrawEngineImpl extends ClassLoader implements DrawingEngine {
 				System.out.println(se.getMessage());
 			} catch (final IOException ioe) {
 				System.err.println(ioe.getMessage());
-			} catch (Exception e) {
+			} catch (final Exception e) {
 				System.out.println("WRONG LAST OF LOAD XML");
 			}
 
@@ -484,16 +483,16 @@ public class DrawEngineImpl extends ClassLoader implements DrawingEngine {
 					Color fillColor = new Color(0);
 					Map<String, Double> properties;
 					Shape loadedShape = null;
-					
+
 					for (int j = 0; j < this.supportedShapes.size(); j++) {
 						//System.out.println(this.supportedShapes.get(j).getSimpleName());
 						if (this.supportedShapes.get(j).getSimpleName().equals(type)) {
-				            // Create a new instance from the loaded class
-				            Constructor constructor = null;
+							// Create a new instance from the loaded class
+							Constructor constructor = null;
 							try {
 								constructor = this.getSupportedShapes().get(j).getConstructor();
 								loadedShape = (Shape)constructor.newInstance();
-								
+
 								final JSONArray propertiesArray = (JSONArray) singleShape.get("Properties");
 								String val = (String) propertiesArray.get(0);
 								position.x = (int) Double.parseDouble(val);
@@ -504,33 +503,33 @@ public class DrawEngineImpl extends ClassLoader implements DrawingEngine {
 								color = Color.decode(val);
 								val = (String) propertiesArray.get(3);
 								fillColor = Color.decode(val);
-								
-								Method methodGetProperties = this.getSupportedShapes().get(j).getMethod("getProperties");
+
+								final Method methodGetProperties = this.getSupportedShapes().get(j).getMethod("getProperties");
 								System.out.println("Invoked method name: " + methodGetProperties.getName());
 								properties = (Map<String, Double>) methodGetProperties.invoke(loadedShape);
-											
+
 								int counter = 4;
-								for (String key : properties.keySet()) {
+								for (final String key : properties.keySet()) {
 									properties.put(key, Double.parseDouble((String) propertiesArray.get(counter++)));
 								}
-								
+
 								if (!type.equals("Null")) {
-									Method methodSetPosition = this.getSupportedShapes().get(j).getMethod("setPosition", Point.class);
+									final Method methodSetPosition = this.getSupportedShapes().get(j).getMethod("setPosition", Point.class);
 									System.out.println("Invoked method name: " + methodSetPosition.getName());
 									methodSetPosition.invoke(loadedShape, position);
-									
-									Method methodSetColor = this.getSupportedShapes().get(j).getMethod("setColor", Color.class);
+
+									final Method methodSetColor = this.getSupportedShapes().get(j).getMethod("setColor", Color.class);
 									System.out.println("Invoked method name: " + methodSetColor.getName());
 									methodSetColor.invoke(loadedShape, color);
 
-									Method methodSetFillColor = this.getSupportedShapes().get(j).getMethod("setFillColor", Color.class);
+									final Method methodSetFillColor = this.getSupportedShapes().get(j).getMethod("setFillColor", Color.class);
 									System.out.println("Invoked method name: " + methodSetFillColor.getName());
 									methodSetFillColor.invoke(loadedShape, fillColor);
-									
-									Method methodSetProperties = this.getSupportedShapes().get(j).getMethod("setProperties", Map.class);
+
+									final Method methodSetProperties = this.getSupportedShapes().get(j).getMethod("setProperties", Map.class);
 									System.out.println("Invoked method name: " + methodSetProperties.getName());
 									methodSetProperties.invoke(loadedShape, properties);
-									
+
 									loadedShape.setPosition(position);
 									loadedShape.setFillColor(fillColor);
 									loadedShape.setColor(color);
@@ -539,17 +538,17 @@ public class DrawEngineImpl extends ClassLoader implements DrawingEngine {
 
 								this.addShape(loadedShape);
 								break;
-								
-							} catch (IllegalAccessException e) {
+
+							} catch (final IllegalAccessException e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
-							} catch (IllegalArgumentException e) {
+							} catch (final IllegalArgumentException e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
-							} catch (InvocationTargetException e) {
+							} catch (final InvocationTargetException e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
-							} catch (Exception e) {
+							} catch (final Exception e) {
 								e.printStackTrace();
 							}
 						} else if (type.equals("Null")) {
@@ -558,7 +557,7 @@ public class DrawEngineImpl extends ClassLoader implements DrawingEngine {
 						}
 					}
 					// System.out.println("in");
-					
+
 				}
 
 			} catch (final Exception e) {
@@ -568,63 +567,63 @@ public class DrawEngineImpl extends ClassLoader implements DrawingEngine {
 		this.undo.clear();
 		this.redo.clear();
 	}
-	
+
 	public void reflect(String path) {
 		final String cN = path.substring(path.lastIndexOf('\\') + 1, path.length());
 		path = path.substring(0, path.lastIndexOf('\\'));
-    	File operatorFile = new File(path);
+		final File operatorFile = new File(path);
 
-	    ClassLoader operatorsLoader = null;
+		ClassLoader operatorsLoader = null;
 		try {
 			operatorsLoader = new URLClassLoader(new URL[] { operatorFile.toURI().toURL() });
-		} catch (MalformedURLException e1) {
+		} catch (final MalformedURLException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 
-		File[] files = operatorFile.listFiles(new FilenameFilter() {
-	        @Override public boolean accept(File dir, String name) {
-	        	//System.out.println(cN);
-	            return name.endsWith(".class") && name.equals(cN);
-	        }
-	    });
+		final File[] files = operatorFile.listFiles(new FilenameFilter() {
+			@Override public boolean accept(File dir, String name) {
+				//System.out.println(cN);
+				return name.endsWith(".class") && name.equals(cN);
+			}
+		});
 		//System.out.println(files.length);
 		if (files.length == 0) {
 			throw new RuntimeException("File is not found in the destination or not supported format.");
 		}
-	    ArrayList<Class> operators = new ArrayList<>();
-	    for (File file : files) {
-	        String className = file.getName().substring(0, file.getName().length() - 6);
-	        System.out.println(className);
-	        try {
-				Class<? extends Shape> clazz = (Class<? extends Shape>) operatorsLoader.loadClass(className);
+		final ArrayList<Class> operators = new ArrayList<>();
+		for (final File file : files) {
+			final String className = file.getName().substring(0, file.getName().length() - 6);
+			System.out.println(className);
+			try {
+				final Class<? extends Shape> clazz = (Class<? extends Shape>) operatorsLoader.loadClass(className);
 				this.supportedShapes.add(clazz);
-		        System.out.println(clazz.getName());
-        
-			} catch (ClassNotFoundException e) {
+				System.out.println(clazz.getName());
+
+			} catch (final ClassNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-	        
-	    }
+
+		}
 
 	}
-	
+
 	public void reflectJarFile(String path) {
-		ArrayList<Class> classes = new ArrayList();
-		String jarName = new String(path);
+		final ArrayList<Class> classes = new ArrayList();
+		final String jarName = new String(path);
 		try {
-			JarInputStream jarFile = new JarInputStream(new FileInputStream(jarName));
-			File myJar = new File(jarName);
-			URL url = myJar.toURI().toURL();
-		
-			Class[] parameters = new Class[]{URL.class};
-			URLClassLoader sysLoader =(URLClassLoader)ClassLoader.getSystemClassLoader();
-			Class sysClass = URLClassLoader.class;
-			Method method = sysClass.getDeclaredMethod("addURL", parameters);
+			final JarInputStream jarFile = new JarInputStream(new FileInputStream(jarName));
+			final File myJar = new File(jarName);
+			final URL url = myJar.toURI().toURL();
+
+			final Class[] parameters = new Class[]{URL.class};
+			final URLClassLoader sysLoader =(URLClassLoader)ClassLoader.getSystemClassLoader();
+			final Class sysClass = URLClassLoader.class;
+			final Method method = sysClass.getDeclaredMethod("addURL", parameters);
 			method.setAccessible(true);
 			method.invoke(sysLoader, new Object[]{url});
-			
+
 			JarEntry jarEntry;
 			while (true) {
 				jarEntry = jarFile.getNextJarEntry();
@@ -633,17 +632,17 @@ public class DrawEngineImpl extends ClassLoader implements DrawingEngine {
 				}
 				if (jarEntry.getName().endsWith(".class")) {
 					System.out.println(jarEntry.getName().replaceAll("/", "\\."));
-					String name = jarEntry.getName().replaceAll("/", "\\.").replace(".class", "");
-					Constructor cs = ClassLoader.getSystemClassLoader().loadClass(name).getConstructor();
-					Object instance = cs.newInstance();
-					Method test = ClassLoader.getSystemClassLoader().loadClass(name).getMethod("test");
+					final String name = jarEntry.getName().replaceAll("/", "\\.").replace(".class", "");
+					final Constructor cs = ClassLoader.getSystemClassLoader().loadClass(name).getConstructor();
+					final Object instance = cs.newInstance();
+					final Method test = ClassLoader.getSystemClassLoader().loadClass(name).getMethod("test");
 					this.supportedShapes.add((Class<? extends Shape>) ClassLoader.getSystemClassLoader()
 							.loadClass(name));
 					test.invoke(instance);
 				}
-		}
-		
-		} catch (Exception e) {
+			}
+
+		} catch (final Exception e) {
 			System.out.println(e.getMessage());
 		}
 

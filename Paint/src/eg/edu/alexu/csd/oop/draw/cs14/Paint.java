@@ -1,5 +1,6 @@
 package eg.edu.alexu.csd.oop.draw.cs14;
 
+import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.Font;
@@ -14,7 +15,6 @@ import javax.swing.JColorChooser;
 import javax.swing.JComboBox;
 import javax.swing.JEditorPane;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import eg.edu.alexu.csd.oop.draw.DrawingEngine;
@@ -61,19 +61,21 @@ public class Paint {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 
-		final JPanel drawingCanvas = new JPanel();
+		final Canvas drawingCanvas = new Canvas();
 		drawingCanvas.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				if(currentShape != null){
+					drawer.refresh(drawingCanvas.getGraphics());
 					currentShape.setPosition(arg0.getPoint());
 					final Map<String , Double> properties = currentShape.getProperties();
 					int counter = 0;
-					for (final String key: properties.keySet()){properties.put(key, Double.parseDouble(inputNode.inputArray.get(counter++).getText()));
+					for (final String key: properties.keySet()){
+						properties.put(key, Double.parseDouble(inputNode.inputArray.get(counter++).getText()));
 					}
 					currentShape.setProperties(properties);
-					//currentShape.draw(drawingCanvas.getGraphics());
-					drawer.refresh(drawingCanvas.getGraphics());
+					currentShape.draw(drawingCanvas.getGraphics());
+					//drawer.refresh(drawingCanvas.getGraphics());
 					inputNode.clear();
 					currentShape = null;
 
@@ -174,9 +176,14 @@ public class Paint {
 		btnNewButton_2.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				final JColorChooser cr = new JColorChooser();
-				final Color outline = cr.showDialog(null, "Enter outline color", Color.BLACK);
-				currentShape.setColor(outline);
+				final Color fillC = JColorChooser.showDialog(null, "Please Choose the Fill Color",
+						Color.BLACK);
+				try{
+					currentShape.setColor(fillC);
+				}
+				catch (final Exception e1) {
+					// TODO: handle exception
+				}
 			}
 		});
 		btnNewButton_2.setFont(new Font("Tahoma", Font.ITALIC, 20));
@@ -187,9 +194,15 @@ public class Paint {
 		btnNewButton_3.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				final JColorChooser cr = new JColorChooser();
-				final Color fillColor = cr.showDialog(null, "Enter outline color", Color.BLACK);
-				currentShape.setFillColor(fillColor);
+				final Color fillC = JColorChooser.showDialog(null, "Please Choose the Fill Color",
+						Color.BLACK);
+				try{
+					currentShape.setFillColor(fillC);
+				}
+				catch (final Exception e1) {
+					// TODO: handle exception
+				}
+
 			}
 		});
 		btnNewButton_3.setFont(new Font("Tahoma", Font.BOLD, 20));
