@@ -56,23 +56,22 @@ public class Main {
 		o.addShape(test4);
 
 
-		final Map<String, Double> con5 = new HashMap<String, Double>();
-		con5.put("Radius", 5.0);
-		final Shape test5 = new Circle();
-		test5.setPosition(point);
-		test5.setColor(color);
-		test5.setFillColor(color);
-		test5.setProperties(con5);
+
+
+		System.out.println(o.getShapes().length);
 
 
 
-
-		o.save("akram");
-
-		final DrawEngineImpl testtt = new DrawEngineImpl();
-		testtt.load("akram");
-		Shape[] allDrawnShapes = new Shape[testtt.getShapes().length];
-		allDrawnShapes=testtt.getShapes();
+		o.save("akram.XmL");
+		
+		o.load("akram.XmL");
+		
+		o.save("akram.XmL");
+		
+		System.out.println(o.getSupportedShapes().size());
+		o.reflect("D:\\test\\CircleTwo.class");
+		System.out.println(o.getSupportedShapes().size());
+		
 		System.out.println(o.getShapes().length);
 
 	}

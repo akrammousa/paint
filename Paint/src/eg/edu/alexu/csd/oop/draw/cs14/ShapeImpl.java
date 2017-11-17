@@ -18,7 +18,7 @@ public class ShapeImpl implements Shape {
 		position.x = 0;
 		position.y = 0;
 		color = new Color(0);
-		fillColor = new Color(255,255,255);
+		fillColor = new Color(255, 255, 255);
 		type = "Null";
 	}
 	public String getType() {

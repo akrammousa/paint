@@ -28,14 +28,14 @@ public class Triangle extends ShapeImpl {
 	public void draw(Graphics canvas) {
 		final int sPX = getProperties().get("secondPointX").intValue();
 		final int sPY = getProperties().get("secondPointY").intValue();
-		final int thPX = getProperties().get("thirdPointY").intValue();
+		final int thPX = getProperties().get("thirdPointX").intValue();
 		final int thPY = getProperties().get("thirdPointY").intValue();
 		((Graphics2D) canvas).setColor(getFillColor());
 		((Graphics2D) canvas).setStroke(new BasicStroke(2));
 		((Graphics2D) canvas).setColor(getColor());
 		int[] xPoints = { (int)super.getPosition().getX(), sPX, thPX};
 		int[] yPoints = {(int)super.getPosition().getY(), sPY, thPY};
-		((Graphics2D) canvas).drawPolyline(xPoints, yPoints, 3   );
+		((Graphics2D) canvas).drawPolygon(xPoints, yPoints, 3);
 	}
 
 	@Override

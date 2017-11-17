@@ -12,10 +12,10 @@ import javax.swing.JTextField;
 public class InputNode {
 	static List<JTextField> inputArray;
 	static List<JLabel> labelArray;
-	JFrame frame;
-	void initializeInputNodes(Map<String, Double> properties) {
+	static JFrame frame;
+	static void initializeInputNodes(Map<String, Double> properties) {
 		frame = Paint.frame;
-		this.clear();
+		clear();
 		inputArray = new ArrayList<JTextField>();
 		labelArray = new ArrayList<JLabel>();
 		int xCounterOfTextField = 31;
@@ -23,9 +23,7 @@ public class InputNode {
 		for (final String key: properties.keySet()) {
 			final JTextField inputTextField = new JTextField();
 			inputTextField.setBounds(xCounterOfTextField, 109, 116, 36);
-			frame
-			.getContentPane()
-			.add(inputTextField);
+			frame.getContentPane().add(inputTextField);
 			inputTextField.setColumns(10);
 			inputArray.add(inputTextField);
 			xCounterOfTextField += 126;
@@ -39,9 +37,10 @@ public class InputNode {
 			xCounterOfLable += 126;
 		}
 		frame.repaint();
+		inputArray.get(0).requestFocus();
 	}
 
-	void clear (){
+	static void clear (){
 		if(inputArray!=null){
 			for (int i = 0; i < inputArray.size(); i++) {
 				frame.remove(inputArray.get(i));

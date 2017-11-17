@@ -25,11 +25,11 @@ public class Elipse extends ShapeImpl {
 		final int a=getProperties().get("A").intValue();
 		final int b=getProperties().get("B").intValue();
 		((Graphics2D) canvas).setColor(getFillColor());
-		((Graphics2D) canvas).fillArc((int) getPosition().getX(), (int) getPosition().getY(), a, b, 0, 360);
+		((Graphics2D) canvas).fillArc((int) getPosition().getX() - (a / 2), (int) getPosition().getY() - (b / 2), a, b, 0, 360);
 
 		((Graphics2D) canvas).setStroke(new BasicStroke(2));
 		((Graphics2D) canvas).setColor(getColor());
-		((Graphics2D) canvas).drawArc((int) getPosition().getX(), (int) getPosition().getY(), a, b, 0, 360);
+		((Graphics2D) canvas).drawArc((int) getPosition().getX() - (a / 2), (int) getPosition().getY() - (b / 2), a, b, 0, 360);
 
 	}
 
