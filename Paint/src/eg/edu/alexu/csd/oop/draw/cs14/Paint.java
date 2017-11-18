@@ -10,6 +10,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
 import java.util.Map;
+
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JColorChooser;
 import javax.swing.JComboBox;
@@ -17,6 +19,7 @@ import javax.swing.JEditorPane;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.filechooser.FileNameExtensionFilter;
+
 import eg.edu.alexu.csd.oop.draw.Shape;
 
 public class Paint {
@@ -28,7 +31,7 @@ public class Paint {
 	final Canvas drawingCanvas = SingeltonCanvas.getCanvas();
 	DrawEngineImpl drawerImpl = SingeltonDrawingEngine.getDrawingEnginInstance();
 	List<Class<? extends Shape>> supportedShapes = drawerImpl.getSupportedShapes();
-	
+
 	static JComboBox<String> comboBox;
 	private Class<? extends Shape> classOfCurrentShape;
 	/**
@@ -49,14 +52,23 @@ public class Paint {
 	}
 
 	/**
-	 * Paint shapes buttons according to supported classes. 
+	 * Paint shapes buttons according to supported classes.
 	 */
 	private void initializeShapesButtons() {
 		for (int j = 0; j < supportedShapes.size(); j++) {
 			final int k = j;
 			final int buttonWidthPlusMargin = 60;
 			final int firstButtonXPosition = 31;
-			final JButton shapeButton = new JButton(supportedShapes.get(k).getSimpleName());
+			final JButton shapeButton = new JButton();
+			try {
+				shapeButton.setIcon(new ImageIcon(supportedShapes.get(k).getSimpleName() + ".png"));
+			} catch (final Exception e) {
+				// TODO: handle exception
+			}
+			if(supportedShapes.get(k).getSimpleName().equals("Circle")){
+
+				shapeButton.setIcon(new ImageIcon("circle.png"));
+			}
 			shapeButton.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
@@ -72,13 +84,23 @@ public class Paint {
 		}
 	}
 
+	protected ImageIcon createImageIcon(String path) {
+		final java.net.URL imgURL = getClass().getResource(path);
+		if (imgURL != null) {
+			return new ImageIcon(imgURL);
+		} else {
+			System.err.println("Couldn't find file: " + path);
+			return null;
+		}
+	}
+
 	/**
 	 * Create the application.
 	 */
 	public Paint() {
 		initialize();
 	}
-	
+
 	/**
 	 * Prepare the shapes to be selected from combobox.
 	 * @param drawnShapes **All drawn shapes**.
@@ -87,12 +109,12 @@ public class Paint {
 		comboBox.removeAllItems();
 		comboBox.addItem("Nothing selected");
 		for (int i = 0; i < drawnShapes.length; i++) {
-			comboBox.addItem(drawnShapes[i].getClass().getSimpleName() + " " + (i+1));	
+			comboBox.addItem(drawnShapes[i].getClass().getSimpleName() + " " + (i+1));
 		}
 	}
 
 	private void cloneSelectedShape() {
-		Shape copiedShape = drawerImpl.getShapes()[comboBox.getSelectedIndex() - 1];
+		final Shape copiedShape = drawerImpl.getShapes()[comboBox.getSelectedIndex() - 1];
 		classOfCurrentShape = copiedShape.getClass();
 		ShapeFactory.supportedClasses = supportedShapes;
 		currentShape = copiedShape;
@@ -117,11 +139,11 @@ public class Paint {
 	private void highlightSelectedShape(int selectedItemIndex) {
 		drawingCanvas.getGraphics().clearRect(0, 0, 1209, 599);
 		drawerImpl.refresh(drawingCanvas.getGraphics());
-		Shape selectedItem = drawerImpl.getShapes()[selectedItemIndex - 1];
+		final Shape selectedItem = drawerImpl.getShapes()[selectedItemIndex - 1];
 		Shape highlightedShaped = null;
 		try {
 			highlightedShaped = (Shape) selectedItem.clone();
-		} catch (CloneNotSupportedException e1) {
+		} catch (final CloneNotSupportedException e1) {
 			e1.printStackTrace();
 		}
 		highlightedShaped.setFillColor(Color.LIGHT_GRAY);
@@ -130,7 +152,7 @@ public class Paint {
 	}
 
 	private void drawCurrentShape(MouseEvent arg0) {
-		String className = classOfCurrentShape.getSimpleName();
+		final String className = classOfCurrentShape.getSimpleName();
 		currentShape = ShapeFactory.getShape(className);
 		currentShape.setPosition(arg0.getPoint());
 		System.out.println(currentShape.getClass().getSimpleName());
@@ -152,13 +174,14 @@ public class Paint {
 		refreshCanvasAndComboBox();
 		System.out.println(drawerImpl.getShapes().length);
 	}
-	
+
 	/**
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
 		frame = new JFrame();
 		frame.setBounds(100, 100, 1200,700);
+		frame.getContentPane().setBackground(Color.GRAY);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 
@@ -171,18 +194,21 @@ public class Paint {
 
 			}
 		});
+
+
 		drawingCanvas.setBackground(Color.WHITE);
 		drawingCanvas.setBounds(10, 156, 1029, 495);
 		frame.getContentPane().add(drawingCanvas);
 
 		initializeShapesButtons();
-		
+
 
 		final JEditorPane editorPane = new JEditorPane();
 		editorPane.setBounds(648, 508, 106, 22);
 		frame.getContentPane().add(editorPane);
 
-		final JButton colorBtn = new JButton("Color");
+		final JButton colorBtn = new JButton();
+		colorBtn.setIcon(new ImageIcon("color.png"));
 		colorBtn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -194,7 +220,8 @@ public class Paint {
 		colorBtn.setBounds(751, 14, 141, 55);
 		frame.getContentPane().add(colorBtn);
 
-		final JButton fillColorBtn = new JButton("Fill Color");
+		final JButton fillColorBtn = new JButton();
+		fillColorBtn.setIcon(new ImageIcon("fillcolor.png"));
 		fillColorBtn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -206,10 +233,12 @@ public class Paint {
 		fillColorBtn.setBounds(751, 80, 141, 52);
 		frame.getContentPane().add(fillColorBtn);
 
-		final JButton undoBtn = new JButton("Undo");
+		final JButton undoBtn = new JButton();
+		undoBtn.setIcon(new ImageIcon("undo.png"));
 		undoBtn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
+
 				drawerImpl.undo();
 				refreshCanvasAndComboBox();
 			}
@@ -217,7 +246,8 @@ public class Paint {
 		undoBtn.setBounds(915, 15, 54, 52);
 		frame.getContentPane().add(undoBtn);
 
-		final JButton redoBtn = new JButton("Redo");
+		final JButton redoBtn = new JButton();
+		redoBtn.setIcon(new ImageIcon("redo.png"));
 		redoBtn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -228,35 +258,39 @@ public class Paint {
 		redoBtn.setBounds(915, 84, 54, 52);
 		frame.getContentPane().add(redoBtn);
 
-		final JButton saveBtn = new JButton("Save");
+		final JButton saveBtn = new JButton();
+		saveBtn.setIcon(new ImageIcon("save.png"));
 		saveBtn.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
-				JFileChooser chooser = new JFileChooser();
-				FileNameExtensionFilter filter = new FileNameExtensionFilter("XmL", "JsOn");
-					chooser.setFileFilter(filter);
-					int returnVal = chooser.showOpenDialog(frame);
-					if(returnVal == JFileChooser.APPROVE_OPTION) {
-					   String path = chooser.getSelectedFile().getAbsolutePath();
-					   drawerImpl.save(path);					   
-					}
+				final JFileChooser chooser = new JFileChooser();
+				final FileNameExtensionFilter filter = new FileNameExtensionFilter("XmL", "JsOn");
+				chooser.setFileFilter(filter);
+				final int returnVal = chooser.showOpenDialog(frame);
+				if(returnVal == JFileChooser.APPROVE_OPTION) {
+					final String path = chooser.getSelectedFile().getAbsolutePath();
+					drawerImpl.save(path);
+				}
 			}
 		});
 		saveBtn.setFont(new Font("Tahoma", Font.BOLD, 20));
 		saveBtn.setBounds(1045, 508, 133, 52);
 		frame.getContentPane().add(saveBtn);
 
-		final JButton loadBtn = new JButton("Load");
+		final JButton loadBtn = new JButton();
+		loadBtn.setIcon(new ImageIcon("load.png"));
 		loadBtn.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
-				JFileChooser chooser = new JFileChooser();
-				FileNameExtensionFilter filter = new FileNameExtensionFilter("XmL", "JsOn");
-					chooser.setFileFilter(filter);
-					int returnVal = chooser.showOpenDialog(frame);
-					if(returnVal == JFileChooser.APPROVE_OPTION) {
-					   String path = chooser.getSelectedFile().getAbsolutePath();
-					   drawerImpl.load(path);
-					   refreshCanvasAndComboBox();
-					}
+				final JFileChooser chooser = new JFileChooser();
+				final FileNameExtensionFilter filter = new FileNameExtensionFilter("XmL", "JsOn");
+				chooser.setFileFilter(filter);
+				final int returnVal = chooser.showOpenDialog(frame);
+				if(returnVal == JFileChooser.APPROVE_OPTION) {
+					final String path = chooser.getSelectedFile().getAbsolutePath();
+					drawerImpl.load(path);
+					refreshCanvasAndComboBox();
+				}
 			}
 		});
 		loadBtn.setFont(new Font("Tahoma", Font.BOLD, 20));
@@ -269,18 +303,19 @@ public class Paint {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				System.out.println("hna " + comboBox.getSelectedIndex());
-				int selectedItemIndex = comboBox.getSelectedIndex();
+				final int selectedItemIndex = comboBox.getSelectedIndex();
 				if (selectedItemIndex > 0) {
 					highlightSelectedShape(selectedItemIndex);
 				} else if (selectedItemIndex == 0) {
 					drawingCanvas.getGraphics().clearRect(0, 0, 1209, 599);
 					drawerImpl.refresh(drawingCanvas.getGraphics());
 				}
-				}
+			}
 		});
 		frame.getContentPane().add(comboBox);
 
-		final JButton btnNewButton = new JButton("Delete");
+		final JButton btnNewButton = new JButton();
+		btnNewButton.setIcon(new ImageIcon("delete.png"));
 		btnNewButton.setFont(new Font("Tahoma", Font.BOLD, 20));
 		btnNewButton.addActionListener(new ActionListener() {
 			@Override
@@ -294,32 +329,36 @@ public class Paint {
 		btnNewButton.setBounds(1039, 31, 97, 84);
 		frame.getContentPane().add(btnNewButton);
 
-		JButton importBtn = new JButton("Import");
+		final JButton importBtn = new JButton();
+		importBtn.setIcon(new ImageIcon("import.png"));
 		importBtn.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
-				JFileChooser chooser = new JFileChooser();
-				FileNameExtensionFilter filter = new FileNameExtensionFilter("jar", "class");
-					chooser.setFileFilter(filter);
-					int returnVal = chooser.showOpenDialog(frame);
-					if(returnVal == JFileChooser.APPROVE_OPTION) {
-					   String path = chooser.getSelectedFile().getAbsolutePath();
-					   drawerImpl.reflect(path);
-					   initializeShapesButtons();
-					   frame.repaint();
-					}
+				final JFileChooser chooser = new JFileChooser();
+				final FileNameExtensionFilter filter = new FileNameExtensionFilter("jar", "class");
+				chooser.setFileFilter(filter);
+				final int returnVal = chooser.showOpenDialog(frame);
+				if(returnVal == JFileChooser.APPROVE_OPTION) {
+					final String path = chooser.getSelectedFile().getAbsolutePath();
+					drawerImpl.reflect(path);
+					initializeShapesButtons();
+					frame.repaint();
+				}
 			}
 		});
 		importBtn.setFont(new Font("Tahoma", Font.BOLD, 20));
 		importBtn.setBounds(1045, 440, 133, 52);
 		frame.getContentPane().add(importBtn);
 
-		JButton editBtn = new JButton("Edit");
+		final JButton editBtn = new JButton();
+		editBtn.setIcon(new ImageIcon("edit.png"));
 		editBtn.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
-					UpdateShape.initialieTheShapeToBeEdited((Shape)drawerImpl.getShapes()[comboBox.getSelectedIndex() - 1], (Shape)drawerImpl.getShapes()[comboBox.getSelectedIndex() - 1].clone());
+					UpdateShape.initialieTheShapeToBeEdited(drawerImpl.getShapes()[comboBox.getSelectedIndex() - 1], (Shape)drawerImpl.getShapes()[comboBox.getSelectedIndex() - 1].clone());
 					UpdateShape.main(null);
-				} catch (Exception exc) {
+				} catch (final Exception exc) {
 					exc.printStackTrace();
 				}
 			}
@@ -328,8 +367,10 @@ public class Paint {
 		editBtn.setBounds(1045, 371, 133, 52);
 		frame.getContentPane().add(editBtn);
 
-		JButton copyBtn = new JButton("Copy");
+		final JButton copyBtn = new JButton();
+		copyBtn.setIcon(new ImageIcon("copy.png"));
 		copyBtn.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (comboBox.getSelectedIndex() - 1 >= 0) {
 					cloneSelectedShape();
@@ -341,4 +382,5 @@ public class Paint {
 		frame.getContentPane().add(copyBtn);
 
 	}
+
 }
