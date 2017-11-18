@@ -65,10 +65,6 @@ public class Paint {
 			} catch (final Exception e) {
 				// TODO: handle exception
 			}
-			if(supportedShapes.get(k).getSimpleName().equals("Circle")){
-
-				shapeButton.setIcon(new ImageIcon("circle.png"));
-			}
 			shapeButton.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
