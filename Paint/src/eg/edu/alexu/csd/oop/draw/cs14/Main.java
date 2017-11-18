@@ -70,6 +70,7 @@ public class Main {
 		
 		System.out.println(o.getSupportedShapes().size());
 		o.reflect("D:\\test\\CircleTwo.class");
+		System.out.println("D:\\test\\CircleTwo.class");
 		System.out.println(o.getSupportedShapes().size());
 		
 		System.out.println(o.getShapes().length);

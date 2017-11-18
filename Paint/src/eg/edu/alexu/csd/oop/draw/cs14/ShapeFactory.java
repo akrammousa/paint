@@ -14,14 +14,13 @@ public class ShapeFactory {
 		for (int i = 0; i < supportedClasses.size(); i++) {
 			if (typeOfShape
 					.equals(supportedClasses
-							.get(i)
-							.getSimpleName())) {
+					.get(i)
+					.getSimpleName())) {
 				try {
 					final Constructor<? extends Shape> constructor = supportedClasses.get(i).getConstructor();
 					final Shape instance = constructor.newInstance();
 					return instance;
 				} catch (final Exception e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}

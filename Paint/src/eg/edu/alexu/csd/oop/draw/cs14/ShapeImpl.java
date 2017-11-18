@@ -19,10 +19,6 @@ public class ShapeImpl implements Shape {
 		position.y = 0;
 		color = new Color(0);
 		fillColor = new Color(255, 255, 255);
-		type = "Null";
-	}
-	public String getType() {
-		return type;
 	}
 
 	@Override
