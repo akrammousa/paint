@@ -18,6 +18,7 @@ import javax.swing.JComboBox;
 import javax.swing.JEditorPane;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import eg.edu.alexu.csd.oop.draw.Shape;
@@ -181,6 +182,14 @@ public class Paint {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 
+		final JLabel drawingShape = new JLabel("");
+		drawingShape.setBounds(577, 80, 177, 52);
+		frame.getContentPane().add(drawingShape);
+
+		final JLabel drawingShapeIcon = new JLabel("");
+		drawingShapeIcon.setBounds(577, 12, 166, 55);
+		frame.getContentPane().add(drawingShapeIcon);
+
 		drawingCanvas.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
@@ -213,7 +222,7 @@ public class Paint {
 			}
 		});
 		colorBtn.setFont(new Font("Tahoma", Font.ITALIC, 20));
-		colorBtn.setBounds(751, 14, 141, 55);
+		colorBtn.setBounds(1031, 12, 141, 55);
 		frame.getContentPane().add(colorBtn);
 
 		final JButton fillColorBtn = new JButton();
@@ -226,7 +235,7 @@ public class Paint {
 			}
 		});
 		fillColorBtn.setFont(new Font("Tahoma", Font.BOLD, 20));
-		fillColorBtn.setBounds(751, 80, 141, 52);
+		fillColorBtn.setBounds(1031, 80, 141, 52);
 		frame.getContentPane().add(fillColorBtn);
 
 		final JButton undoBtn = new JButton();
@@ -239,7 +248,7 @@ public class Paint {
 				refreshCanvasAndComboBox();
 			}
 		});
-		undoBtn.setBounds(915, 15, 54, 52);
+		undoBtn.setBounds(1045, 243, 67, 52);
 		frame.getContentPane().add(undoBtn);
 
 		final JButton redoBtn = new JButton();
@@ -251,7 +260,7 @@ public class Paint {
 				refreshCanvasAndComboBox();
 			}
 		});
-		redoBtn.setBounds(915, 84, 54, 52);
+		redoBtn.setBounds(1111, 243, 67, 52);
 		frame.getContentPane().add(redoBtn);
 
 		final JButton saveBtn = new JButton();
@@ -294,7 +303,7 @@ public class Paint {
 		frame.getContentPane().add(loadBtn);
 
 		comboBox = new JComboBox<String>();
-		comboBox.setBounds(575, 19, 169, 52);
+		comboBox.setBounds(850, 12, 169, 52);
 		comboBox.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -322,7 +331,7 @@ public class Paint {
 				}
 			}
 		});
-		btnNewButton.setBounds(1039, 31, 97, 84);
+		btnNewButton.setBounds(1045, 165, 127, 69);
 		frame.getContentPane().add(btnNewButton);
 
 		final JButton importBtn = new JButton();
@@ -377,6 +386,6 @@ public class Paint {
 		copyBtn.setBounds(1045, 308, 133, 52);
 		frame.getContentPane().add(copyBtn);
 
-	}
 
+	}
 }
